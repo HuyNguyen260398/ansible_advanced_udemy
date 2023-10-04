@@ -1,9 +1,6 @@
 - name: Deploy a web application
   hosts: db_and_web_servers
   tasks:
-    - name: Try Ping
-      ping:
-
     - name: Install all required dependencies
       apt: name={{ item }} state=installed
       with_items:
@@ -12,40 +9,5 @@
         - python-dev
         - build-essential
         - python-pip
-
-    - name: Install MySQL database
-      apt: name={{ item }} state=installed
-      with_items:
-        - mysql-server
-        - mysql-client
-
-    - name: Start MySQL service
-      service:
-        name: mysql
-        state: started
-        enabled: yes
-
-    - name: Create application database
-      mysql_db: name=employee_db state=present
-
-    - name: Create user database
-      mysql_user:
-        name: db_user
-        password: Passw0rd
-        priv: '*.*:ALL'
-        state: present
-        host: '%'
-
-    - name: Install Python Flask dependency
-      pip:
-        name: {{ item }}
-        state: present
-      with_items:
-        - flask
-        - flask-mysql
-
-    - name: Copy source code
-      copy: src=app.py dest=/opt/app.py
-
-    - name: Start web server
-      shell: FLASK_APP=/opt/app.py nohup flask run --host=0.0.0.0 &
+    - include: tasks/deploy_db.yaml
+    - include: tasks/deploy_web.yaml
