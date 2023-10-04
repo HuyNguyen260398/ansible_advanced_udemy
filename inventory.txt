@@ -1,0 +1,2 @@
+target1 ansible_host=172.26.188.15  ansible_ssh_user=ansible_target_1_user ansible_ssh_pass=debian12
+target2 ansible_host=172.26.179.194 ansible_ssh_user=ansible_target_2_user ansible_ssh_pass=debian12
