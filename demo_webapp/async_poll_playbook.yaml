@@ -1,0 +1,26 @@
+# Anisble Playbook
+-
+  name: Deploy Web Application
+  hosts: db_and_web_server
+  tasks:
+    - command: /opt/monitor_webapp.py
+      async: 360
+      poll: 0
+      register: webapp_result
+
+    - command: /opt/monitor_database.py
+      async: 360
+      poll: 0
+      register: database_result
+
+    - name: Check status of tasks
+      async_status: jid= {{ webapp_result.ansible_job_id }}
+      register: job_result
+      until: job_result.finished
+      retries: 30
+
+# async: how long to run?
+
+# poll: how frequently to check? default 10 seconds
+
+# async_status - check status of an async task
